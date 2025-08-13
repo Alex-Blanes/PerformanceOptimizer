@@ -333,7 +333,7 @@ namespace PerformanceOptimizer
         public override void Clear()
         {
             clearMethods ??= GetClearMethods().ToList();
-            foreach (MethodInfo method in clearMethods)
+            foreach (MethodInfo method in clearMethods.Where(m => !m.ContainsGenericParameters).ToList())
             {
                 try
                 {
