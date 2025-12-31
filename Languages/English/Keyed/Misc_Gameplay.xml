@@ -19,6 +19,7 @@
 	<PO.FixCheckForDuplicateNodes>Try to fix duplicate XML nodes errors</PO.FixCheckForDuplicateNodes>
 	<PO.CacheFactionOfPlayer>Cache Faction:OfPlayer</PO.CacheFactionOfPlayer>
 	<PO.CacheStatWorker_MarketValue>Cache StatWorker_MarketValue:CalculableRecipe</PO.CacheStatWorker_MarketValue>
+  <PO.Pawn_PsychicEntropyTracker_CachedStatDef>Cache PsychicEntropyMax stat and optimize neural heat</PO.Pawn_PsychicEntropyTracker_CachedStatDef>
 	
 	<PO.CacheSettings>Cache and throttle settings</PO.CacheSettings>
 	<PO.QuestLodger>QuestUtility:IsQuestLodger</PO.QuestLodger>
