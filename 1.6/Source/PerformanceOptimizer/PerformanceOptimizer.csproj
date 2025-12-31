@@ -62,6 +62,7 @@
     <Compile Include="Optimizations\CacheWithRefresh\Optimization_PlantFallColors_GetFallColorFactor.cs" />
     <Compile Include="Optimizations\CacheWithRefresh\Optimization_Pawn_InteractionsTracker_CurrentSocialMode.cs" />
     <Compile Include="Optimizations\Cache\Optimization_HediffDef_PossibleToDevelopImmunityNaturally.cs" />
+    <Compile Include="Optimizations\Cache\Optimization_Pawn_PsychicEntropyTracker_CachedStatDef.cs" />
     <Compile Include="Optimizations\Cache\Optimization_StatWorker_MarketValue_CalculableRecipe.cs" />
     <Compile Include="Optimizations\CacheWithRefresh\Optimization_SkillRecord_LearnRateFactor.cs" />
     <Compile Include="Optimizations\UITweaks\Optimization_ColonistBarColonistDrawer_DrawIcons.cs" />
@@ -108,7 +109,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Krafs.Rimworld.Ref">
-      <Version>1.6.4524-beta</Version>
+      <Version>1.6.4633</Version>
     </PackageReference>
     <PackageReference Include="Lib.Harmony">
       <Version>2.3.6</Version>
