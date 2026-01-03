@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -14,23 +15,45 @@ namespace PerformanceOptimizer
 
         public override void DoPatches()
         {
-            base.DoPatches();
-
-            // VPE already includes this patch
-            if (ModLister.AnyModActiveNoSuffix(["VanillaExpanded.VPsycastsE"]))
-                return;
-
-            // Make PsychicEntropyMax StatDef cacheable (if it isn't already)
-            if (!StatDefOf.PsychicEntropyMax.cacheable)
+            try
             {
-                StatDefOf.PsychicEntropyMax.cacheable = true;
-                StatDefOf.PsychicEntropyMax.Worker.temporaryStatCache = new Dictionary<Thing, StatCacheEntry>();
-            }
+                base.DoPatches();
 
-            // Patch both problematic getters
-            var transpiler = GetMethod(nameof(Transpiler));
-            Patch(typeof(Pawn_PsychicEntropyTracker).DeclaredPropertyGetter(nameof(Pawn_PsychicEntropyTracker.MaxEntropy)), transpiler: transpiler);
-            Patch(typeof(Pawn_PsychicEntropyTracker).DeclaredPropertyGetter(nameof(Pawn_PsychicEntropyTracker.MaxPotentialEntropy)), transpiler: transpiler);
+                // VPE already includes this patch
+                if (ModLister.AnyModActiveNoSuffix(["VanillaExpanded.VPsycastsE"]))
+                    return;
+                
+                if (StatDefOf.PsychicEntropyMax == null)
+                {
+                    Log.Warning("PO: PsychicEntropyMax StatDef not found. Skipping Pawn_PsychicEntropyTracker optimization.");
+                    return;
+                }
+
+                // Make PsychicEntropyMax StatDef cacheable (if it isn't already)
+                if (!StatDefOf.PsychicEntropyMax.cacheable)
+                {
+                    StatDefOf.PsychicEntropyMax.cacheable = true;
+                    StatDefOf.PsychicEntropyMax.Worker.temporaryStatCache = new Dictionary<Thing, StatCacheEntry>();
+                }
+                
+                var maxEntropyGetter = typeof(Pawn_PsychicEntropyTracker).DeclaredPropertyGetter(nameof(Pawn_PsychicEntropyTracker.MaxEntropy));
+                var maxPotentialEntropyGetter = typeof(Pawn_PsychicEntropyTracker).DeclaredPropertyGetter(nameof(Pawn_PsychicEntropyTracker.MaxPotentialEntropy));
+
+                if (maxEntropyGetter == null || maxPotentialEntropyGetter == null)
+                {
+                    Log.Warning("PO: Could not find Pawn_PsychicEntropyTracker properties (MaxEntropy or MaxPotentialEntropy). Skipping optimization.");
+                    return;
+                }
+
+                // Patch both problematic getters
+                var transpiler = GetMethod(nameof(Transpiler));
+                Patch(maxEntropyGetter, transpiler: transpiler);
+                Patch(maxPotentialEntropyGetter, transpiler: transpiler);
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"PO: Error in Optimization_Pawn_PsychicEntropyTracker_CachedStatDef.DoPatches(): {ex.Message}\n{ex.StackTrace}");
+            }
         }
 
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instr, MethodBase baseMethod)
