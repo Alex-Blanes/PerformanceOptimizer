@@ -16,6 +16,10 @@ namespace PerformanceOptimizer
         {
             base.DoPatches();
 
+            // PsychicEntropyMax is tied to Royalty and Biotech, so we need to make sure the StatDef is present.
+            if (StatDefOf.PsychicEntropyMax == null)
+                return;
+
             // VPE already includes this patch
             if (ModLister.AnyModActiveNoSuffix(["VanillaExpanded.VPsycastsE"]))
                 return;
